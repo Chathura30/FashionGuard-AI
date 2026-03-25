@@ -1,6 +1,6 @@
 # FashionGuard AI
 
-AI-powered platform for protecting fashion designs using invisible digital watermarking and military-grade encryption.
+AI-powered fashionguar platform for protecting fashion designs using invisible digital watermarking and military-grade encryption.
 
 ---
 
