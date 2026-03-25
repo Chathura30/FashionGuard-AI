@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  watermark-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fashionguard-watermark
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=INFO
+      - DEBUG=false
+      # Node.js backend URL (use host.docker.internal for local development)
+      - NODEJS_BACKEND_URL=http://host.docker.internal:5000
+      # Watermark settings
+      - DCT_BASE_STRENGTH=25.0
+      - LSB_BIT_DEPTH=2
+      - REDUNDANCY_FACTOR=3
+      - RS_ERROR_SYMBOLS=32
+      - ENABLE_AI_OPTIMIZATION=true
+      # Quality targets
+      - TARGET_PSNR=40.0
+      - TARGET_SSIM=0.98
+      - MIN_CONFIDENCE_THRESHOLD=0.7
+      # Limits
+      - MAX_IMAGE_SIZE_MB=50
+      - MAX_IMAGE_DIMENSION=8192
+    volumes:
+      # Share storage volume with Node.js backend (read-only)
+      - ../storage:/app/storage:ro
+    networks:
+      - fashionguard-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/health/live')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+networks:
+  fashionguard-network:
+    driver: bridge
+    name: fashionguard-network
