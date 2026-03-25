@@ -43,3 +43,6 @@ FashionGuard AI lets designers upload, encrypt, and watermark their fashion desi
 4. Retrieve ownership record from database
 5. Compare ownership records
 6. Confirm original designer — displays Designer ID, timestamp, and confidence score
+
+## Contributing
+Pull requests are welcome.
